@@ -1,0 +1,43 @@
+# .gitignore for .NET projects
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Others
+*.dbmdl
+*.bak
+*.backup
+*.mdf
+*.ldf
+
+# Publish results
+*.publish.xml
+
+# Rider
+.idea/
+*.sln.iml
+
+# Azure Pipelines
+.azure-pipelines/
+
+# Local secrets
+secrets.json
