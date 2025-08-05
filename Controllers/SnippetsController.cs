@@ -16,21 +16,26 @@ public class SnippetsController : ControllerBase
     [HttpGet]
     public IActionResult GetAll([FromQuery] string? lang = null)
     {
-        var snippets = _snippetService.GetAll(lang);
+        var user = HttpContext.Items["User"] as UserResponse;
+        var snippets = _snippetService.GetAll(lang, user?.Id);
         return Ok(snippets);
     }
 
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
-        var snippet = _snippetService.GetById(id);
+        var user = HttpContext.Items["User"] as UserResponse;
+        var snippet = _snippetService.GetById(id, user?.Id);
         return snippet is not null ? Ok(snippet) : NotFound();
     }
 
     [HttpPost]
-    public IActionResult AddSnippet([FromBody] Snippet snippet)
+    public IActionResult AddSnippet([FromBody] CreateSnippetRequest request)
     {
-        var createdSnippet = _snippetService.AddSnippet(snippet);
+        var user = HttpContext.Items["User"] as UserResponse;
+        if (user == null) return Unauthorized();
+
+        var createdSnippet = _snippetService.AddSnippet(request, user.Id);
         return CreatedAtAction(nameof(GetById), new { id = createdSnippet.Id }, createdSnippet);
     }
 }
