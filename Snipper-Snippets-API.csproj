@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Snipper_Snippets_API</RootNamespace>
+    <UserSecretsId>6133dc8a-98b5-4182-9c5d-eeba3f18dd6a</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
