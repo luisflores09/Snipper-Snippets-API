@@ -1,15 +1,20 @@
+using Microsoft.EntityFrameworkCore;
+using Snipper_Snippets_API.Data;
 using Snipper_Snippets_API.Models;
 
 namespace Snipper_Snippets_API.Services
 {
     public class AuthService
     {
-        private readonly List<User> _users = new();
-        private int _nextId = 1;
-
-        public UserResponse CreateUser(CreateUserRequest request)
+        private readonly SnipperDbContext _context;
+        public AuthService(SnipperDbContext context)
         {
-            if (_users.Any(u => u.Email.Equals(request.Email, StringComparison.OrdinalIgnoreCase)))
+            _context = context;
+        }
+
+        public async Task<UserResponse> CreateUserAsync(CreateUserRequest request)
+        {
+            if (await _context.Users.AnyAsync(u => u.Email.ToLower() == request.Email.ToLower()))
             {
                 throw new InvalidOperationException("User with this email already exists.");
             }
@@ -18,20 +23,21 @@ namespace Snipper_Snippets_API.Services
 
             var user = new User
             {
-                Id = _nextId++,
                 Email = request.Email,
                 Password = hashedPassword
             };
 
-            _users.Add(user);
+            _context.Users.Add(user);
+
+            await _context.SaveChangesAsync();
 
             return new UserResponse { Id = user.Id, Email = user.Email };
         }
 
-        public UserResponse? AuthenticateUser(string email, string password)
+        public async Task<UserResponse?> AuthenticateUserAsync(string email, string password)
         {
-            var user = _users.FirstOrDefault(u =>
-            u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
 
             if (user == null)
                 return null;
